@@ -19,6 +19,10 @@ if (process.env.NODE_ENV === 'development') {
   app.use(cors({ origin: `http://localhost:3000` }))
 }
 
+mongoose.connect(process.env.MONGO_URL, {useNewUrlParser: true, useUnifiedTopology: true})
+  .then(() => console.log('DB connected'))
+  .catch((err) => console.log('DB Error =>', err))
+
 // middleware
 app.use('/api', authRoutes)
 
