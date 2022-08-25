@@ -16,10 +16,10 @@ app.use(morgan('dev'))
 app.use(bodyParser.json())
 // app.use(cors()) // allows all origins to access to api
 if (process.env.NODE_ENV === 'development') {
-  app.use(cors({ origin: `http://localhost:3000` }))
+  app.use(cors({ origin: process.env.CLIENT_URL }))
 }
 
-mongoose.connect(process.env.MONGO_URL, {useNewUrlParser: true, useUnifiedTopology: true})
+mongoose.connect(process.env.MONGO_URL, { useNewUrlParser: true, useUnifiedTopology: true })
   .then(() => console.log('DB connected'))
   .catch((err) => console.log('DB Error =>', err))
 
