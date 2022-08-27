@@ -8,8 +8,8 @@ const { signup, accountActivation, signin } = require('../controllers/auth')
 const { userSignUpValidator, userSignInValidator } = require('../validators/auth')
 const { runValidation } = require('../validators')
 
-router.get('/signup', userSignUpValidator, runValidation, signup)
-router.get('/account-activation', accountActivation)
-router.get('/signin', userSignInValidator, runValidation, signin)
+router.post('/signup', userSignUpValidator, runValidation, signup)
+router.post('/account-activation', accountActivation)
+router.post('/signin', userSignInValidator, runValidation, signin)
 
 module.exports = router 

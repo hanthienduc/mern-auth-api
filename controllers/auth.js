@@ -1,5 +1,6 @@
 const User = require('../models/user')
 const jwt = require('jsonwebtoken')
+const {expressjwt} = require('express-jwt')
 // using this for testing purpose only 
 // exports.signup = (req, res) => {
 
@@ -46,7 +47,7 @@ exports.signup = (req, res) => {
     const token = jwt.sign(
       { name, email, password },
       process.env.JWT_ACCOUNT_ACTIVATION,
-      { expiresIn: process.env.JWT_EXPIRES_IN }
+      { expiresIn: `${process.env.JWT_EXPIRES_IN}d` }
     )
 
     const emailData = {
@@ -138,3 +139,6 @@ exports.signin = (req, res) => {
     })
   })
 }
+exports.requireSignIn = expressjwt({
+  secret: process.env.JWT_SECRET, algorithms: ['HS256']
+})

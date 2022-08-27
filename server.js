@@ -10,14 +10,15 @@ const app = express()
 
 // import routes
 const authRoutes = require('./routes/auth')
+const userRoutes = require('./routes/user')
 
 // app app middleware
 app.use(morgan('dev'))
 app.use(bodyParser.json())
-// app.use(cors()) // allows all origins to access to api
+// allows all origins to access to api
+// app.use(cors())
 if (process.env.NODE_ENV === 'development') {
-  // app.use(cors({ origin: process.env.CLIENT_URL }))
-  app.use(cors())
+  app.use(cors({ origin: process.env.CLIENT_URL, credentials: true })) 
 }
 
 mongoose.connect(process.env.MONGO_URL, { useNewUrlParser: true, useUnifiedTopology: true })
@@ -26,6 +27,7 @@ mongoose.connect(process.env.MONGO_URL, { useNewUrlParser: true, useUnifiedTopol
 
 // middleware
 app.use('/api', authRoutes)
+app.use('/api', userRoutes)
 
 const port = process.env.PORT || 8000
 
