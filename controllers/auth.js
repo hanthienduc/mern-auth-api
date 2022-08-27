@@ -45,7 +45,7 @@ exports.signup = (req, res) => {
 
     const token = jwt.sign(
       { name, email, password },
-      process.env.JWT_SECRET,
+      process.env.JWT_ACCOUNT_ACTIVATION,
       { expiresIn: process.env.JWT_EXPIRES_IN }
     )
 
@@ -71,7 +71,7 @@ exports.accountActivation = (req, res) => {
   const { token } = req.body
 
   if (token) {
-    jwt.verify(token, process.env.JWT_SECRET, function (err, decodedToken) {
+    jwt.verify(token, process.env.JWT_ACCOUNT_ACTIVATION, function (err, decodedToken) {
       if (err) {
         console.log('JWT VERIFY IN ACCOUNT ACTIVATION ERROR', err)
         return res.status(401).json({
@@ -100,4 +100,41 @@ exports.accountActivation = (req, res) => {
       message: 'Something went wrong. please try again!'
     })
   }
+}
+
+/**
+ * check if user is trying to signin but haven't signup yet
+ * check if password match hashed_password that is saved in db
+ * if yes, generate token with expiry
+ * the token will be sent to client/react
+ * it will be used as jwt based authentication system
+ * we can allow user to access protected routes later if they have valid token 
+ * so jwt token is like password with expiry
+ * in successful signin we will send user info and valid token
+ * this token will be send back to server from client/react to access protected route
+*/
+exports.signin = (req, res) => {
+  const { email, password } = req.body
+  // check if user exist 
+  User.findOne({ email }).exec((err, user) => {
+    if (err || !user) {
+      return res.status(400).json({
+        error: 'User with that email does not exist. Please signup'
+      })
+    }
+    // authenticate
+    if (!user.authenticate(password)) {
+      return res.status(400).json({
+        error: 'Email and password do not match'
+      })
+    }
+    // generate a token and send to client
+    const token = jwt.sign({ _id: user._id }, process.env.JWT_SECRET, { expiresIn: '7d' }) \
+    const { _id, name, email, role } = user
+
+    return res.json({
+      token,
+      user: { _id, name, email, role }
+    })
+  })
 }
