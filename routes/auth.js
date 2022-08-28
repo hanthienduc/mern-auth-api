@@ -2,7 +2,7 @@ const express = require('express')
 const router = express.Router()
 
 // import controller
-const { signup, accountActivation, signin, forgotPassword, resetPassword, googleLogin } = require('../controllers/auth')
+const { signup, accountActivation, signin, forgotPassword, resetPassword, googleLogin, facebookLogin } = require('../controllers/auth')
 
 // import validators
 const { userSignUpValidator, userSignInValidator,forgotPasswordValidator, resetPasswordValidator } = require('../validators/auth')
@@ -18,4 +18,5 @@ router.put('/reset-password', resetPasswordValidator, resetPassword)
 
 // google and facebook
 router.post('/google-login', googleLogin)
+router.post('/facebook-login', facebookLogin)
 module.exports = router 
