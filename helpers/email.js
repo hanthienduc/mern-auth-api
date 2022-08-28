@@ -1,7 +1,7 @@
 const nodeMailer = require('nodemailer')
 require('dotenv').config()
 
-exports.sendEmailWithNodemailer = (req, res, emailData) => {
+exports.sendEmailWithNodemailer = (req, res, emailData, message) => {
   const transporter = nodeMailer.createTransport({
     host: "smtp.gmail.com",
     port: 587,
@@ -21,7 +21,7 @@ exports.sendEmailWithNodemailer = (req, res, emailData) => {
     .then(info => {
       console.log(`Message sent: ${info.response}`)
       return res.json({
-        message: `Email has been sent to your email. Follow the instruction to activate your account`
+        message: `Email has been sent to your email. Follow the instruction to ${message}`
       })
     })
     .catch((error) => {
