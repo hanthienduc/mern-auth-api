@@ -19,6 +19,8 @@
   - `JWT_EXPIRES_IN=7` -> represent days
   - `GOOGLE_CLIENT_ID=YOUR_GOOGLE_CLOUD_APP_ID`
   
+# Start the server in local
+- in the command line run `npm run dev`
 
 # Client Repo
 https://github.com/hanthienduc/mern-auth-client
