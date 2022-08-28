@@ -1,6 +1,6 @@
 const User = require('../models/user')
 const jwt = require('jsonwebtoken')
-const {expressjwt} = require('express-jwt')
+const { expressjwt } = require('express-jwt')
 // using this for testing purpose only 
 // exports.signup = (req, res) => {
 
@@ -142,3 +142,22 @@ exports.signin = (req, res) => {
 exports.requireSignIn = expressjwt({
   secret: process.env.JWT_SECRET, algorithms: ['HS256']
 })
+
+exports.adminMiddleware = (req, res, next) => {
+  User.findById({ _id: req.user._id }).exec((err, user) => {
+    if (err || !user) {
+      return res.status(400).json({
+        error: 'User not found'
+      })
+    }
+
+    if (user.role !== 'admin') {
+      return res.status(400).json({
+        error: 'Admin resource. Access denied.'
+      })
+    }
+
+    req.profile = user
+    next();
+  })
+}
