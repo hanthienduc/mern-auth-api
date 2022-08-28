@@ -179,8 +179,8 @@ exports.forgotPassword = (req, res) => {
     )
 
     const emailData = {
-      from: `${process.env.GMAIL_USER}`, 
-      to: email, 
+      from: `${process.env.GMAIL_USER}`,
+      to: email,
       subject: "Password Reset link",
       html: `
         <h1>Please use the following link to reset your password</h1>
@@ -191,11 +191,21 @@ exports.forgotPassword = (req, res) => {
       `
     }
 
-    sendEmailWithNodemailer(req, res, emailData, 'reset your password')
+    return user.updateOne({ resetPasswordLink: token }, (err, success) => {
+      if (err) {
+        console.log('RESET PASSWORD LINK ERROR', err)
+        return res.status(400).json({
+          error: 'Database connection error on user password forgot request'
+        })
+      } else {
+        sendEmailWithNodemailer(req, res, emailData, 'reset your password')
+      }
+    })
 
   })
 }
 
 exports.resetPassword = (req, res) => {
-  //
+  const { resetPasswordLink, newPassword } = req.body
+
 }
