@@ -17,7 +17,9 @@ exports.read = (req, res) => {
 exports.update = (req, res) => {
   // console.log('UPDATE USER - req.user', req.user, 'UPDATE DATA', req.body)
   const { name, password } = req.body
-
+  if (!req.user) {
+    return res.json(req.user)
+  }
   User.findOne({ _id: req.user._id }, (err, user) => {
     if (err || !user) {
       return res.status(400).json({
@@ -51,7 +53,7 @@ exports.update = (req, res) => {
       }
       updatedUser.hashed_password = undefined
       updatedUser.salt = undefined
-      res.json(updatedUser)
+      res.json({ updatedUser })
     })
   })
 }
