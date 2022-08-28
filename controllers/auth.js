@@ -175,7 +175,7 @@ exports.forgotPassword = (req, res) => {
     }
 
     const token = jwt.sign(
-      { _id: user._id },
+      { _id: user._id, name: user.name },
       process.env.JWT_RESET_PASSWORD,
       { expiresIn: `10m` }
     )
@@ -224,23 +224,19 @@ exports.resetPassword = (req, res) => {
             error: 'Something went wrong. Try later'
           })
         }
-      })
 
-      const updatedFields = {
-        password: newPassword,
-        resetPasswordLink: ''
-      }
-
-      user = _.extend(user, updatedFields)
-
-      user.save((err, result) => {
-        if (err) {
-          return res.status(400).json({
-            error: 'Error resetting user password'
+        user.password = newPassword
+        user.resetPasswordLink = ''
+        
+        user.save((err, result) => {
+          if (err) {
+            return res.status(400).json({
+              error: 'Error resetting user password'
+            })
+          }
+          res.json({
+            message: `Great! Now you can login with your password`
           })
-        }
-        res.json({
-          message: `Great! Now you can login with your password`
         })
       })
     })
